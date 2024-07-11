@@ -46,18 +46,24 @@ The `symboltable_input.txt` file contains a series of commands to manipulate the
 ### Example Input File (`symboltable_input.txt`)
 
 ```plaintext
-begin
-assign x 10
-assign y 20
-print x
-begin
-assign x 30
-print x
-print y
+begin 
+    assign a 1
+    assign b 2
+    begin
+        assign a 3
+        assign c 4
+        print b
+        begin
+            assign c 5
+            print b
+            print a
+            print c
+        end
+        print a
+        print c
+    end
+    print a
 end
-print x
-end
-print x
 ```
 
 ## Author
