@@ -65,7 +65,7 @@ begin
     print a
 end
 ```
-###Output
+### Output
 Please check the output image file uploaded in repository
 ## Author
 Sumedh Ganpatye
