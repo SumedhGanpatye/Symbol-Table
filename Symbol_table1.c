@@ -1,28 +1,31 @@
-// Created by Sumedh Ganpatye Date 15/03 19:49 
-//completed 15/03 23:01  approx 4 hours
+// Created by Sumedh Ganpatye Date 15/03 19:49
+// Completed 15/03 23:01 approx 4 hours
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 #define HASH_SIZE 101
 #define BUFFER_SIZE 10
 
+// Define the structure for a symbol node
 typedef struct Symbol_Node_Tag
 {
-    struct Symbol_Node_Tag *symbol_next;
-    char name[BUFFER_SIZE];
-    int value;
+    struct Symbol_Node_Tag *symbol_next; // Pointer to the next symbol node in the hash chain
+    char name[BUFFER_SIZE];              // Variable name
+    int value;                           // Variable value
 } Symbol_Node;
 
+// Define the structure for a scope node
 typedef struct Scope_Node_Tag
 {
-    struct Scope_Node_Tag *next;
-    Symbol_Node *hash_arr[HASH_SIZE];
+    struct Scope_Node_Tag *next;      // Pointer to the next scope node in the linked list
+    Symbol_Node *hash_arr[HASH_SIZE]; // Hash table for the current scope
 } Scope_Node;
 
+// Function to create a new symbol node
 Symbol_Node *Create_New_Symbol(char var[], int value)
 {
-    //name and its value
     Symbol_Node *new_symbol = (Symbol_Node *)malloc(sizeof(Symbol_Node));
     strcpy(new_symbol->name, var);
     new_symbol->value = value;
@@ -30,6 +33,7 @@ Symbol_Node *Create_New_Symbol(char var[], int value)
     return new_symbol;
 }
 
+// Function to generate a hash key for a variable name
 int getKey(char var[])
 {
     int h = 0;
@@ -40,9 +44,9 @@ int getKey(char var[])
     return h % HASH_SIZE;
 }
 
+// Function to create a new scope node
 Scope_Node *Create_New_Scope(Scope_Node **curr_scope)
 {
-    // new link in liked list node i.e scope
     Scope_Node *new_Scope = (Scope_Node *)malloc(sizeof(Scope_Node));
     for (int i = 0; i < HASH_SIZE; i++)
     {
@@ -54,10 +58,10 @@ Scope_Node *Create_New_Scope(Scope_Node **curr_scope)
     return (*curr_scope);
 }
 
+// Function to assign a value to a variable in the current scope
 void just_assign(Scope_Node *curr_scope, char var[], int value)
 {
     int key = getKey(var);
-
     Symbol_Node *new_symbol = Create_New_Symbol(var, value);
     Symbol_Node *temp = curr_scope->hash_arr[key];
     if (temp != NULL)
@@ -74,6 +78,7 @@ void just_assign(Scope_Node *curr_scope, char var[], int value)
     }
 }
 
+// Function to delete the current scope and free memory
 Scope_Node *delete_curr_scope(Scope_Node **curr_scope)
 {
     for (int i = 0; i < HASH_SIZE; i++)
@@ -93,6 +98,7 @@ Scope_Node *delete_curr_scope(Scope_Node **curr_scope)
     return (*curr_scope);
 }
 
+// Function to print the value of a variable, searching through all active scopes
 void print(Scope_Node *curr_scope, char var[])
 {
     Scope_Node *temp_scope = curr_scope;
@@ -119,15 +125,16 @@ void print(Scope_Node *curr_scope, char var[])
     return;
 }
 
-int main() 
+int main()
 {
     Scope_Node *curr_scope = NULL;
     FILE *fp = fopen("symboltable_input.txt", "r");
     char ch[BUFFER_SIZE];
     int value;
+
+    // Read commands from the input file
     while (fscanf(fp, "%s", ch) == 1)
     {
-        // printf("file input %s\t", ch);
         if (strcmp(ch, "begin") == 0)
         {
             printf("Creating new hash\n");
@@ -146,7 +153,7 @@ int main()
         }
         else if (strcmp(ch, "end") == 0)
         {
-            printf("deleting curr hash\n");
+            printf("Deleting current hash\n");
             curr_scope = delete_curr_scope(&curr_scope);
         }
     }
